@@ -1,6 +1,10 @@
 library(shiny)
 source("data.R")
 
+
+diff.range<-range(data$diff)
+
+
 ui <- fluidPage(
   
 
