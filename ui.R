@@ -7,10 +7,10 @@ diff.range<-range(data$diff)
 
 ui <- fluidPage(
   
-
+  
   titlePanel("The Wage Gap"),
   
-
+  
   sidebarLayout(
     
     sidebarPanel(
@@ -27,9 +27,12 @@ ui <- fluidPage(
       conditionalPanel(
         condition = "input.data == 'Individual'",
         checkboxGroupInput('occupation2', "Occupation", choices = single.data$Occupation, selected = NULL)
-      )
+      ),
       
-     
+      inputPanel(
+        selectInput('facet.by', label="Facet By", choices=c('cut', 'clarity', 'color')),
+        submitButton(text = "Apply Changes", icon = NULL, width = NULL)
+      )
       
     ),
     
@@ -45,18 +48,18 @@ ui <- fluidPage(
                  plotOutput('plot6'),
                  p(textOutput('description', inline=TRUE)),
                  p(strong("Highlighted Points:"), "(Click and drag on chart to select points!)", tableOutput('selected'))
-          
-          
-          ),
+                 
+                 
+        ),
         tabPanel("Table", 
                  p("The table below is a collection of the data visualized in the plot. Although, in addition to seeing the 
                    sepal height and petal height, you're also able to see the sepal width and petal width! You can search for 
                    specific data entries using the search bar on the right, or organize how many results you would like to see
                    per page using the selector on the left."),
                  dataTableOutput('table')
-                 )
+        )
       )
-     
+      
     )
   )
 )
