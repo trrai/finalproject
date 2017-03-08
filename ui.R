@@ -1,8 +1,6 @@
 library(shiny)
 source("data.R")
 
-sepal.range <- range(iris_db$Sepal.Length)
-petal.range <- range(iris_db$Petal.Length)
 diff.range<-range(data$diff)
 
 ui <- fluidPage(
