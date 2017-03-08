@@ -1,6 +1,8 @@
 library("dplyr")
 library("ggplot2")
 data<-read.csv("inc_occ_gender.csv", stringsAsFactors = FALSE)
+data.wage.time <- read.csv("WageTime.csv", stringsAsFactors = FALSE) %>% 
+                  filter(SUBJECT != "SELFEMPLOYED")
 data$M_weekly <- strtoi(data$M_weekly) #Convert to Int for ease of use
 data$F_weekly <- strtoi(data$F_weekly) #Convert to Int for ease of use
 

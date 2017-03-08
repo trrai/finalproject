@@ -12,6 +12,9 @@ server <- function(input, output) {
     return(db)
   })
   
+  wage.filtered <- reactive({
+    return(filter(data.wage.time, LOCATION == input$time.wage) %>% select(TIME, Value)) 
+  })
   output$plot <- renderPlot({
 
     p <- ggplot(data = filtered(), mapping = aes(x = Occupation, y = All_workers,fill=diff)) +
@@ -21,6 +24,10 @@ server <- function(input, output) {
 
   
     return(p)
+  })
+  
+  output$text1 <- renderText({
+    paste0("sdasdasaff")
   })
   
   filtered2 <- reactive({
@@ -41,6 +48,10 @@ server <- function(input, output) {
     return(p)
   })
   
+  output$text2 <- renderText({
+    paste0("sdasdasaff")
+  })
+  
   filtered3 <- reactive({
     db <- male.data %>%
       filter(Occupation %in% input$occupation2 | Occupation %in% input$occupation1)
@@ -57,6 +68,10 @@ server <- function(input, output) {
     
     
     return(p)
+  })
+  
+  output$text3 <- renderText({
+    paste0("sdasdasaff")
   })
   
   filtered4 <- reactive({
@@ -76,6 +91,10 @@ server <- function(input, output) {
     return(p)
   })
   
+  output$text4 <- renderText({
+    paste0("sdasdasaff")
+  }) 
+  
   filtered5 <- reactive({
     db <- top.ten.percent.male.difference
     return(db)
@@ -91,6 +110,10 @@ server <- function(input, output) {
     
     
     return(p)
+  })
+  
+  output$text5 <- renderText({
+    paste0("sdasdasaff")
   })
   
   filtered6 <- reactive({
@@ -109,6 +132,8 @@ server <- function(input, output) {
     
     return(p)
   })
+  
+
   
   desc<-reactive({
     paragraph<-paste0("The graph above is a visual representation for data collected from 150 Iris plants. Currently, the graph represents the ",
@@ -130,6 +155,30 @@ server <- function(input, output) {
                                      "Difference of Male to Female Wage", "Wage Gap Gender Favor")
     return(filtered.data.frame)
   })
+  
+  output$plot7 <- renderPlot ({
+    h <- ggplot(data = wage.filtered(),aes(x = TIME, y = Value, colour = Value))+
+      geom_line()+
+      geom_point()+
+      theme_light()+
+    labs(title = "Line graph showing change in wage gap over time", x = "Time (Year)", y = "")
+    return(h)
+  })
+  
+  output$text <- renderText({
+    string <- function(input.wage) {
+      if(is.null(input.wage))
+        return("Hover over Time Wage Plot")
+        paste("Year = ", round(input.wage$x,0), "Wage Gap = ", round(input.wage$y,2))
+    }
+    paste0("Numbers:", string(input$hover))
+  })
+  
+  output$text6 <- renderText({
+    paste0("sdasdasaff")
+  })
+  
+  
 }
 
 shinyServer(server)

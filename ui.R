@@ -1,10 +1,6 @@
 library(shiny)
 source("data.R")
 
-sepal.range <- range(iris_db$Sepal.Length)
-petal.range <- range(iris_db$Petal.Length)
-diff.range<-range(data$diff)
-
 ui <- fluidPage(
   
 
@@ -21,13 +17,15 @@ ui <- fluidPage(
       
       conditionalPanel(
         condition = "input.data == 'Group'",
-        checkboxGroupInput('occupation1', "Occupation", choices = grouped.data$Occupation, selected = NULL)
+        checkboxGroupInput('occupation1', "Occupation", choices = grouped.data$Occupation, selected = c("MANAGEMENT", "BUSINESS"))
       ),
       
       conditionalPanel(
         condition = "input.data == 'Individual'",
         checkboxGroupInput('occupation2', "Occupation", choices = single.data$Occupation, selected = NULL)
-      )
+      ),
+      
+      selectInput("time.wage", "Select Country for Time Wage", choices = data.wage.time$LOCATION %>% unique())
       
      
       
@@ -38,13 +36,35 @@ ui <- fluidPage(
       tabsetPanel(
         tabPanel("Plot", 
                  plotOutput('plot', brush = "plot_brush"),
+                 br(),
+                 p(textOutput('text1')),
+                 br(),br(),
                  plotOutput('plot2'),
+                 br(),
+                 p(textOutput('text2')),
+                 br(),br(),
                  plotOutput('plot3'),
+                 br(),
+                 p(textOutput('text3')),
+                 br(),br(),
                  plotOutput('plot4'),
+                 br(),
+                 p(textOutput('text4')),
+                 br(),br(),
                  plotOutput('plot5'),
+                 br(),
+                 p(textOutput('text5')),
+                 br(),br(),
                  plotOutput('plot6'),
+                 br(),
                  p(textOutput('description', inline=TRUE)),
-                 p(strong("Highlighted Points:"), "(Click and drag on chart to select points!)", tableOutput('selected'))
+                 br(),
+                 p(strong("Highlighted Points:"), "(Click and drag on chart to select points!)", tableOutput('selected')),
+                 br(),br(),
+                 plotOutput('plot7', hover = "hover"),
+                 p(textOutput('text')),
+                 br(),
+                 p(textOutput('text6'))
           
           
           ),
