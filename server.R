@@ -12,7 +12,7 @@ server <- function(input, output) {
       filter(diff > input$diff.choice[1] & diff < input$diff.choice[2])
     return(db)
   })
-  
+
   wage.filtered <- reactive({
     return(filter(data.wage.time, LOCATION == input$time.wage) %>% select(TIME, Value)) 
   })
@@ -80,11 +80,13 @@ server <- function(input, output) {
       showticklabels = FALSE
     )
     
+
     y_axis_format <- list(
       title = "Amount of Male Workers in Occupation (x1000)",
       titlefont = list(size=12, weight = "bold")
       
     )
+
     
     g<-plot_ly(filtered3(), type="bar", x = ~Occupation, y = ~M_workers, color = ~M_weekly,
                text = ~paste("Median wage for Males: ", M_weekly)) %>% 
@@ -181,7 +183,7 @@ server <- function(input, output) {
   
   desc<-reactive({
     paragraph<-paste0("The graph above is a visual representation for data collected from 150 Iris plants. Currently, the graph represents the ",
-    input$species.choice, " species of Iris plants. The visual shows a correlation between the sepal length of the plant and the
+                      input$species.choice, " species of Iris plants. The visual shows a correlation between the sepal length of the plant and the
     petal length. Sepal length is on a scale from ", input$sepal.choice[1], "cm to ", input$sepal.choice[2],"cm and petal length
     ranges from ", input$petal.choice[1], "cm to ", input$petal.choice[2], "cm. ")
     return(paragraph)

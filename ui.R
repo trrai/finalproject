@@ -5,8 +5,10 @@ library(shinythemes)
 diff.range<-range(data$diff)
 
 
+
 ui <- fluidPage(theme = shinytheme("sandstone"),
                 navbarPage("The Wage Gap."),
+
   sidebarLayout(
     
     sidebarPanel(
@@ -23,13 +25,7 @@ ui <- fluidPage(theme = shinytheme("sandstone"),
         condition = "input.data == 'Individual'",
         checkboxGroupInput('occupation2', "Occupation", choices = single.data$Occupation, selected = NULL)
       ),
-      
-      selectInput("time.wage", "Select Country for Time Wage", choices = data.wage.time$LOCATION %>% unique())
-      
-     
-      
-    ),
-    
+
     
     mainPanel(
       img(src="gap.png"),
@@ -61,6 +57,10 @@ ui <- fluidPage(theme = shinytheme("sandstone"),
                  br(),br(),
                  plotlyOutput('plot6'),
                  br(),
+
+                 p(textOutput('description', inline=TRUE)),
+
+                 br(),
                  br(),br(),
                  p(textOutput('plotText7')),
                  plotOutput('plot7', hover = "hover"),
@@ -70,15 +70,16 @@ ui <- fluidPage(theme = shinytheme("sandstone"),
                  p(textOutput('conclusionText2'))
           
           ),
+
         tabPanel("Table", 
                  p("The table below is a collection of the data visualized in the plot. Although, in addition to seeing the 
                    sepal height and petal height, you're also able to see the sepal width and petal width! You can search for 
                    specific data entries using the search bar on the right, or organize how many results you would like to see
                    per page using the selector on the left."),
                  dataTableOutput('table')
-                 )
+        )
       )
-     
+      
     )
   )
 )
