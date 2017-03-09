@@ -2,6 +2,7 @@ library(shiny)
 library(ggplot2)
 library(dplyr)
 library(plotly)
+library(shinyjs)
 source("data.R")
 
 server <- function(input, output) {
@@ -220,6 +221,12 @@ server <- function(input, output) {
     paste0("Numbers:", string(input$hover))
   })
   
+  observe({
+    if (input$Uncheck > 0) {
+      updateCheckboxGroupInput(session=session, inputId="occupation1", label =  "Occupation", choices = grouped.data$Occupation, selected = c("MANAGEMENT", "BUSINESS"))
+      updateCheckboxGroupInput(session=session, inputId='occupation2',  label = "Occupation", choices = single.data$Occupation, selected = NULL)
+    }
+  })
   
   #PARAGRAPHS HERE 
   output$introductionText <- renderText({
