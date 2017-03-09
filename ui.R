@@ -1,9 +1,9 @@
 library(shiny)
 source("data.R")
 
-sepal.range <- range(iris_db$Sepal.Length)
-petal.range <- range(iris_db$Petal.Length)
+
 diff.range<-range(data$diff)
+
 
 ui <- fluidPage(
   
@@ -21,13 +21,18 @@ ui <- fluidPage(
       
       conditionalPanel(
         condition = "input.data == 'Group'",
-        checkboxGroupInput('occupation1', "Occupation", choices = grouped.data$Occupation, selected = NULL)
+        checkboxGroupInput('occupation1', "Occupation", choices = grouped.data$Occupation, selected = c("MANAGEMENT", "BUSINESS"))
       ),
       
       conditionalPanel(
         condition = "input.data == 'Individual'",
         checkboxGroupInput('occupation2', "Occupation", choices = single.data$Occupation, selected = NULL)
       ),
+<<<<<<< HEAD
+=======
+      
+      selectInput("time.wage", "Select Country for Time Wage", choices = data.wage.time$LOCATION %>% unique())
+>>>>>>> d2da34508afa730cd0317b9e4df5723524b594ad
       
       inputPanel(
         selectInput('facet.by', label="Facet By", choices=c('cut', 'clarity', 'color')),
@@ -40,17 +45,46 @@ ui <- fluidPage(
     mainPanel(
       tabsetPanel(
         tabPanel("Plot", 
-                 plotOutput('plot', brush = "plot_brush"),
-                 plotOutput('plot2'),
-                 plotOutput('plot3'),
-                 plotOutput('plot4'),
-                 plotOutput('plot5'),
-                 plotOutput('plot6'),
+                 plotlyOutput('plot'),
+                 br(),
+                 p(textOutput('text1')),
+                 br(),br(),
+                 plotlyOutput('plot2'),
+                 br(),
+                 p(textOutput('text2')),
+                 br(),br(),
+                 plotlyOutput('plot3'),
+                 br(),
+                 p(textOutput('text3')),
+                 br(),br(),
+                 plotlyOutput('plot4'),
+                 br(),
+                 p(textOutput('text4')),
+                 br(),br(),
+                 plotlyOutput('plot5'),
+                 br(),
+                 p(textOutput('text5')),
+                 br(),br(),
+                 plotlyOutput('plot6'),
+                 br(),
                  p(textOutput('description', inline=TRUE)),
+<<<<<<< HEAD
                  p(strong("Highlighted Points:"), "(Click and drag on chart to select points!)", tableOutput('selected'))
                  
                  
         ),
+=======
+                 br(),
+                 p(strong("Highlighted Points:"), "(Click and drag on chart to select points!)", tableOutput('selected')),
+                 br(),br(),
+                 plotOutput('plot7', hover = "hover"),
+                 p(textOutput('text')),
+                 br(),
+                 p(textOutput('text6'))
+          
+          
+          ),
+>>>>>>> d2da34508afa730cd0317b9e4df5723524b594ad
         tabPanel("Table", 
                  p("The table below is a collection of the data visualized in the plot. Although, in addition to seeing the 
                    sepal height and petal height, you're also able to see the sepal width and petal width! You can search for 
