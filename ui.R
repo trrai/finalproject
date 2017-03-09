@@ -1,5 +1,6 @@
 library(shiny)
 library(shinythemes)
+library(shinyjs)
 library(plotly)
 source("data.R")
 
@@ -21,12 +22,12 @@ ui <- fluidPage(theme = shinytheme("sandstone"),
                     
                     conditionalPanel(
                       condition = "input.data == 'Group'",
-                      checkboxGroupInput('occupation1', "Occupation", choices = grouped.data$Occupation, selected = c("MANAGEMENT", "BUSINESS"))
+                      checkboxGroupInput(inputId="occupation1", label =  "Occupation", choices = grouped.data$Occupation, selected = c("MANAGEMENT", "BUSINESS"))
                     ),
                     
                     conditionalPanel(
                       condition = "input.data == 'Individual'",
-                      checkboxGroupInput('occupation2', "Occupation", choices = single.data$Occupation, selected = NULL)
+                      checkboxGroupInput(inputId='occupation2',  label = "Occupation", choices = single.data$Occupation, selected = NULL)
                     ),
                      
                     selectInput("time.wage", "Select Country for Time Wage", choices = data.wage.time$LOCATION %>% unique())
