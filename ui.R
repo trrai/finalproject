@@ -29,10 +29,7 @@ ui <- fluidPage(
         checkboxGroupInput('occupation2', "Occupation", choices = single.data$Occupation, selected = NULL)
       ),
       
-      inputPanel(
-        selectInput('facet.by', label="Facet By", choices=c('cut', 'clarity', 'color')),
         submitButton(text = "Apply Changes", icon = NULL, width = NULL)
-      )
       
     ),
     

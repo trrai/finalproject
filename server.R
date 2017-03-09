@@ -15,7 +15,7 @@ server <- function(input, output) {
   output$plot <- renderPlot({
     
     p <- ggplot(data = filtered(), mapping = aes(x = Occupation, y = All_workers,fill=diff)) +
-      geom_bar(stat="identity") + facet_wrap(input$facet.by) +theme(axis.text = element_text(size=12, angle=-30, hjust=0), 
+      geom_bar(stat="identity")  + theme(axis.text = element_text(size=12, angle=-30, hjust=0), 
                                         axis.title = element_text(size=15), plot.title = element_text(size=20)) + ggtitle("Overall Data w/ Differences") + 
       scale_fill_gradient(low = "yellow", high = "red") + ylab("Number of All Workers (x1000)")
     
@@ -32,7 +32,7 @@ server <- function(input, output) {
   output$plot2 <- renderPlot({
     
     p <- ggplot(data = filtered2(), mapping = aes(x = Occupation, y = F_workers, fill=F_weekly)) +
-      geom_bar(stat="identity") + facet_wrap(input$facet.by) + theme(axis.text = element_text(size=12, angle=-30, hjust=0), 
+      geom_bar(stat="identity") + theme(axis.text = element_text(size=12, angle=-30, hjust=0), 
                                         axis.title = element_text(size=15), plot.title = element_text(size=20)) +
       ggtitle("Female Data with # of workers & pay rate") + scale_fill_gradient(low = "yellow", high = "red") +
       ylab("Number of Female Workers (x1000)")
@@ -50,7 +50,7 @@ server <- function(input, output) {
   output$plot3 <- renderPlot({
     
     p <- ggplot(data = filtered3(), mapping = aes(x = Occupation, y = M_workers, fill=M_weekly)) +
-      geom_bar(stat="identity") + facet_wrap(input$facet.by) + theme(axis.text = element_text(size=12, angle=-30, hjust=0), 
+      geom_bar(stat="identity")  + theme(axis.text = element_text(size=12, angle=-30, hjust=0), 
                                         axis.title = element_text(size=15), plot.title = element_text(size=20)) + 
       ggtitle("Male Data with # of workers & pay rate") + scale_fill_gradient(low = "yellow", high = "red") + 
       ylab("Number of Male Workers (x1000)")
