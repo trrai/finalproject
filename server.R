@@ -12,21 +12,11 @@ server <- function(input, output) {
       filter(diff > input$diff.choice[1] & diff < input$diff.choice[2])
     return(db)
   })
-  
-<<<<<<< HEAD
-  output$plot <- renderPlot({
-    
-    p <- ggplot(data = filtered(), mapping = aes(x = Occupation, y = All_workers,fill=diff)) +
-      geom_bar(stat="identity") + facet_wrap(input$facet.by) +theme(axis.text = element_text(size=12, angle=-30, hjust=0), 
-                                        axis.title = element_text(size=15), plot.title = element_text(size=20)) + ggtitle("Overall Data w/ Differences") + 
-      scale_fill_gradient(low = "yellow", high = "red") + ylab("Number of All Workers (x1000)")
-    
-    
-    return(p)
-=======
+
   wage.filtered <- reactive({
     return(filter(data.wage.time, LOCATION == input$time.wage) %>% select(TIME, Value)) 
   })
+  
   output$plot <- renderPlotly({
     x_axis_format <- list(
       title = "Occupations (Hover over bars for details!)",
@@ -45,11 +35,6 @@ server <- function(input, output) {
       layout(title = "Overall Data w/ Differences", xaxis = x_axis_format, yaxis = y_axis_format)
   
     return(g)
-  })
-  
-  output$text1 <- renderText({
-    paste0("sdasdasaff")
->>>>>>> d2da34508afa730cd0317b9e4df5723524b594ad
   })
   
   filtered2 <- reactive({
@@ -72,25 +57,14 @@ server <- function(input, output) {
       
     )
     
-<<<<<<< HEAD
-    p <- ggplot(data = filtered2(), mapping = aes(x = Occupation, y = F_workers, fill=F_weekly)) +
-      geom_bar(stat="identity") + facet_wrap(input$facet.by) + theme(axis.text = element_text(size=12, angle=-30, hjust=0), 
-                                        axis.title = element_text(size=15), plot.title = element_text(size=20)) +
-      ggtitle("Female Data with # of workers & pay rate") + scale_fill_gradient(low = "yellow", high = "red") +
-      ylab("Number of Female Workers (x1000)")
-=======
     g<-plot_ly(filtered2(), type="bar", x = ~Occupation, y = ~F_workers, color = ~F_weekly,
                text = ~paste("Median wage for Females: $", F_weekly)) %>% 
       layout(title = "Female Data with # of workers & pay rate", xaxis = x_axis_format, yaxis = y_axis_format)
->>>>>>> d2da34508afa730cd0317b9e4df5723524b594ad
     
     
     return(g)
   })
-  
-  output$text2 <- renderText({
-    paste0("sdasdasaff")
-  })
+
   
   filtered3 <- reactive({
     db <- male.data %>%
@@ -106,19 +80,13 @@ server <- function(input, output) {
       showticklabels = FALSE
     )
     
-<<<<<<< HEAD
-    p <- ggplot(data = filtered3(), mapping = aes(x = Occupation, y = M_workers, fill=M_weekly)) +
-      geom_bar(stat="identity") + facet_wrap(input$facet.by) + theme(axis.text = element_text(size=12, angle=-30, hjust=0), 
-                                        axis.title = element_text(size=15), plot.title = element_text(size=20)) + 
-      ggtitle("Male Data with # of workers & pay rate") + scale_fill_gradient(low = "yellow", high = "red") + 
-      ylab("Number of Male Workers (x1000)")
-=======
+
     y_axis_format <- list(
       title = "Amount of Male Workers in Occupation (x1000)",
       titlefont = list(size=12, weight = "bold")
       
     )
->>>>>>> d2da34508afa730cd0317b9e4df5723524b594ad
+
     
     g<-plot_ly(filtered3(), type="bar", x = ~Occupation, y = ~M_workers, color = ~M_weekly,
                text = ~paste("Median wage for Males: ", M_weekly)) %>% 
@@ -128,9 +96,6 @@ server <- function(input, output) {
     return(g)
   })
   
-  output$text3 <- renderText({
-    paste0("sdasdasaff")
-  })
   
   filtered4 <- reactive({
     db <- bottom.ten.percent.difference
@@ -159,10 +124,6 @@ server <- function(input, output) {
     return(g)
   })
   
-  output$text4 <- renderText({
-    paste0("sdasdasaff")
-  }) 
-  
   filtered5 <- reactive({
     db <- top.ten.percent.male.difference
     return(db)
@@ -189,10 +150,6 @@ server <- function(input, output) {
     
     
     return(g)
-  })
-  
-  output$text5 <- renderText({
-    paste0("sdasdasaff")
   })
   
   filtered6 <- reactive({
@@ -250,7 +207,7 @@ server <- function(input, output) {
       geom_line()+
       geom_point()+
       theme_light()+
-    labs(title = "Line graph showing change in wage gap over time", x = "Time (Year)", y = "")
+      labs(title = "Line graph showing change in wage gap over time", x = "Time (Year)", y = "")
     return(h)
   })
   
@@ -263,10 +220,110 @@ server <- function(input, output) {
     paste0("Numbers:", string(input$hover))
   })
   
-  output$text6 <- renderText({
-    paste0("sdasdasaff")
+  
+  #PARAGRAPHS HERE 
+  output$introductionText <- renderText({
+    paste("A difference in pay between genders has been a growing social issue in our modern day. With both sides
+           holding strong feelings for their preference, it's important to take a step back and analyze the data related
+           to this specific topic. In our report, we've collected information across two separate databases to conduct a 
+           professional and organized report showing trends and key details the pertain to this wage gap issue.", 
+           
+           "The first of the two datasets was collected from the Bureau of Labor Statistics. Jean-Phillipe reformatted
+           the original pdf report into a usable .csv data file. After extensive cleansing, it provided a respectable amount 
+           of data for our purpose. To compliment the information provided by this dataset, we decided to add another dimension
+           to our analysis and incorporate time. Specifically, this information allowed us to compare the trend of the wage gap
+           between genders over time. In addition, we were able to apply a global scope as this new dataset provided information
+           on other countries.",
+           
+           "After a thorough workthrough and breakdown of all the data we collected, our group was able to make educated inferences
+          and realizations. As a whole, it's safe to say there is a wage preference for men as compared to women within the U.S. Although, it
+          was very interested to see the other side of the argument and take a look at which occupations actually gave women the higher wage!
+          The data we collected and presented provides a strong amount of data to support the claim that the wage gap between genders is a 
+          ongoing issue, but is actively improving across the globe and needs a larger focus on specific occupations. ")
+    
+  })
+    
+  
+  plot1text<-reactive({
+    paragraph<-paste0("For a general introduction, we wanted to show the general current state of the occupations selected. In the visual below, you can see
+                      the amount of workers in relation to the occupation. In addition, the color of each bar represents the degree of difference within the
+                      wage for males as compared to females. A brighter yellow represents a high wage difference while a darker purple reprents a lower difference.
+                      The current range of acceptable wage gap difference values is from ", input$diff.choice[1], " to ", input$diff.choice[2],". Please hover over 
+                      any of the bars to show the specific occupation as well as the details on the wage gap for that field!")
+    return(paragraph)
   })
   
+  output$plotText1<- renderText({
+    return(plot1text())
+  })
+  
+  output$plotText2 <- renderText({
+    paste0("Now to get a better understanding of how this wage gap actually breaks down, we can look at the salary information specifically
+           for males and females in the specific occupations. The information presented below is collected from the U.S database and provides
+           median weekly salaries for women working in each field. To begin, the visual below shows the data for females; relating the occupation
+           to the amount of females (in thousands) within that field. This also includes each bar color coordinated to represent the weekly median salary 
+           in US dollars. This gives a better idea on the information collected for females, strengthing the understanding of the wage gap.")
+  })
+  
+  output$plotText3 <- renderText({
+    paste0("Similar to the previous visual, the plot below is a representation of the filtered male data for each occupation. As before, you're able
+           to see the median wage for men in each selected field. In addition, each bar's height is made up of the amount of male workers in that field
+           multiplied by a factor of 1000. The filled color fo each of the bar shows the median wage each male is being paid in that field. 
+           Comparing this plot with the previous gives us a good interpretation of how each gender is compensated.")
+  })
+  
+  output$plotText4 <- renderText({
+    paste0("As with any analysis of a critical issue, it's very important to label specific outliers and bring them to light. Our report fulfills this need
+           as well, narrowing our data to highlight the least and most severe wage gaps across all of the occupations. Down below, we can see the plot that
+           portrays the occupations that make up the bottom 10% of the salary difference between genders. These specific fields have done a good job in treating
+           their employees equally and should continue to set an example for the rest. Specifically, the plot shows the difference in median wages and has the 
+           bars color coded to represent the total number of works within that field. Also, you may notice that some of the bars go below 0; this means that the 
+           gap actually favors women rather than men! ")
+  })
+  
+  output$plotText5 <- renderText({
+    paste0("Now that we've seen the better side of things in our current situation with the wage gap in America, it's time to look at the areas of improvment. 
+           Analysing which occupations require more attention will not only make the process of reducing the gap more efficient, it will also allow companies 
+           to improve on their weaknesses. The visual representation below shows the occupations that made up the top 10% of the wage gap that preferred males
+           over females. Also, the height of the bars show the amount of the difference while the color represents the proportion of males to females in each
+           of the occupations. As usual, make sure to hover over any of the bars to get specific figures pertaining to that job field")
+  })
+  
+  output$plotText6 <- renderText({
+    paste0("Contrary to the plot above, the visual below shows a view of the wage gap that's mostly overlooked. Using a high amount of filtering and parsing, 
+           we were able to construct a bar graph that highlights occupations that actually pays females higher than males in their field. Although, both the 
+           frequency and difference amount is far less than the top 10% of male preferred occupations, it is important to not overlook these occupations when 
+           discussing the idea of wage equality. The goal of reaching an ultimately equal salary across both genders begins with recognizing the issues both 
+           sides present. ")
+  })
+  
+  output$plotText7 <- renderText({
+    paste0("Now it's time to incorporate a factor of time into the data. A bit different from all of the previous visuals, the graph is collected on data collected
+           from countries around the world. This mean you're able to see the change in overall wage gap as time progresses for any preferred country. Please select 
+           the region you would like visualized within the widget options above! Specifically, this line graph shows the change of the value of the wage gap in relation to time. 
+           The x axis represents the time in years, while the y axis represents the wage gap as a percentage of the earnings of men. As you can see, in the case of United states, w
+           age gap reached its lowest value in 2008. It has been decreasing over time which reflects a positive change in our society")
+  })
+  
+  output$conclusionText1 <- renderText({
+    paste0("The data has been presented and the visuals have been shown, but it's time to piece it all together. It's clear that we can see which occupations present 
+           the highest and lowest wage gaps within America, but we can gain a deeper understanding of the information by understand trends shown by the data. Specifically, 
+           occupations that usually had a higher number of male workers showed a wage preference to males. The majority of these fields included STEM, Business, 
+           or security related occupations. In addition, it's important to highlight the absurdly higher amount of occupations that payed men more than women. There
+           were less than 10 occupations that gave the gap preference to women; and those who did usually kept the gap to a minimal amount.")
+  })
+  
+  output$conclusionText2<- renderText({
+    paste0("To make progress towards solving a major social issue like this, it's important to remember actions speak louder than words. Our idea behind putting a spotlight
+           on the occupations with the highest and lowest wage gaps was to help develop a plan for improvment. By knowing where the attention should be centered, it assures 
+           that resources will not be wasted and encourages an effective stratedgy. For example, focusing on an occupation that already has a low salary difference would be 
+           wasting time and ultimately does not make much of a difference in the overall scope of the issue. Rather, keying in on the major factors that the enlarge the overall
+           issue of a wage gap would be much more effective. Taking a step back from only the U.S, the last visual gives a good idea on data from other countries and also 
+           introduces the idea of time. This was critical to include in our report, enhancing the comprehension of a country's improvement on this specific social issue. As noted
+           before, the U.S has done a lot to help narrow this gap but there is still a pattern that tends to jump around. Although there is a general trend of a decrease for the wage
+           gap, a more specific focus on areas of improvement would prove to help this growth greatly. To sum it all up, there is an overall sense of compensation inequality within 
+           the U.S, and other countries as well, but a lot of progress has been made over the years and our society will continue to push towards equality. ")
+  })
   
 }
 
