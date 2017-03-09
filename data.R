@@ -13,18 +13,21 @@ all.data<-data %>% filter(F_weekly != "Na") %>%
   mutate(diff = (M_weekly - F_weekly)) %>% 
   mutate(favor = ifelse(diff > 0, "Male", "Female"))
 
-
+#Take away the all occupations field
 data<-all.data %>% filter(Occupation != "ALL OCCUPATIONS")
 
+#Filter for grouped data! 
+#Since the grouped data is all uppercase, we need an uppercase vector 
+#to test the condition of the second character being an uppercase leter.
 upper.case<-c("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O",
               "P","Q","R","S","T","U","V","W","X","Y","Z")
 grouped.data<-data[substr(data$Occupation,2,2) %in% upper.case,] #Gets groups of occupations
-single.data<-data[substr(data$Occupation,2,2) %in% tolower(upper.case),]
+single.data<-data[substr(data$Occupation,2,2) %in% tolower(upper.case),] #Gets individual occupations
 
-#Overall 
-female.data<-data %>% select(Occupation, F_workers, F_weekly) 
-male.data<-data %>% select(Occupation, M_workers, M_weekly)
-both.sexes.data <- data %>% select(Occupation, All_workers, All_weekly, diff)
+#Major seperated data:
+female.data<-data %>% select(Occupation, F_workers, F_weekly) #Only for females
+male.data<-data %>% select(Occupation, M_workers, M_weekly) #Only for males
+both.sexes.data <- data %>% select(Occupation, All_workers, All_weekly, diff) #All together
 
 #Breakdown of wage gap difference
 male.favored.difference<-single.data %>% filter(diff > 0)

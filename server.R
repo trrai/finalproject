@@ -6,19 +6,23 @@ source("data.R")
 
 server <- function(input, output, session) {
   
+  #check if user pressed clear choices button
   observeEvent(input$reset, {
     x <- input$occupation1
     
+    #reset grouped choices
     updateCheckboxGroupInput(session, "occupation1",
                              selected = c("MANAGEMENT", "BUSINESS")
     )
     
+    #reset individual choices 
     updateCheckboxGroupInput(session, "occupation2",
                              selected = character(0)
     )
     
   })
   
+  #filtered dataframe 1 (U.S data)
   filtered <- reactive({
     db <- data %>%
       filter(Occupation %in% input$occupation2 | Occupation %in% input$occupation1) %>% 
@@ -26,9 +30,11 @@ server <- function(input, output, session) {
     return(db)
   })
 
+  #filtered dataframe 2 (global data)
   wage.filtered <- reactive({
     return(filter(data.wage.time, LOCATION == input$time.wage) %>% select(TIME, Value)) 
   })
+  
   
   output$plot <- renderPlotly({
     x_axis_format <- list(
@@ -51,6 +57,7 @@ server <- function(input, output, session) {
     return(g)
   })
   
+  #female specific data
   filtered2 <- reactive({
     db <- female.data %>%
       filter(Occupation %in% input$occupation2 | Occupation %in% input$occupation1)
@@ -80,7 +87,7 @@ server <- function(input, output, session) {
     return(g)
   })
 
-  
+  #male specific data
   filtered3 <- reactive({
     db <- male.data %>%
       filter(Occupation %in% input$occupation2 | Occupation %in% input$occupation1)
@@ -112,7 +119,7 @@ server <- function(input, output, session) {
     return(g)
   })
   
-  
+  #bottom 10% of the gap
   filtered4 <- reactive({
     db <- bottom.ten.percent.difference
     return(db)
@@ -141,6 +148,7 @@ server <- function(input, output, session) {
     return(g)
   })
   
+  #top 10% where males are paid more than female
   filtered5 <- reactive({
     db <- top.ten.percent.male.difference
     return(db)
@@ -160,9 +168,9 @@ server <- function(input, output, session) {
       
     )
     
-    g<-plot_ly(filtered5(), type="bar", x = ~Occupation, y = ~diff, color = ~(M_workers/All_workers), 
+    g<-plot_ly(filtered5(), type="bar", x = ~Occupation, y = ~diff, color = ~100*(M_workers/All_workers), 
                marker = list(colorbar = list(title = "% Male Workers")),
-               text = ~paste("Percentage of Male Workers: ", (M_workers/All_workers)))%>% 
+               text = ~paste("Percentage of Male Workers: %", round(100*(M_workers/All_workers),2)))%>% 
       layout(title = "Top 10% of Male Favored Gap", xaxis = x_axis_format, yaxis = y_axis_format)
     
     
@@ -170,6 +178,7 @@ server <- function(input, output, session) {
     return(g)
   })
   
+  #top 10% where females are paid more than men 
   filtered6 <- reactive({
     db <- top.ten.percent.female.difference
     return(db)
@@ -189,15 +198,16 @@ server <- function(input, output, session) {
       
     )
     
-    g<-plot_ly(filtered6(), type="bar", x = ~Occupation, y = ~abs(diff), color = ~(F_workers/All_workers),
+    g<-plot_ly(filtered6(), type="bar", x = ~Occupation, y = ~abs(diff), color = ~100*(F_workers/All_workers),
                marker = list(colorbar = list(title = "% Female Workers")),
-               text = ~paste("Percentage of Females workers: ", (F_workers/All_workers))) %>% 
+               text = ~paste("Percentage of Females workers: %", round(100*(F_workers/All_workers), 2))) %>% 
       layout(title = "Top 10% of Female Favored Gap", xaxis = x_axis_format, yaxis = y_axis_format)
     
     
     return(g)
   })
   
+  #Interactive line graph for the global data along with time 
   output$plot7 <- renderPlot ({
     h <- ggplot(data = wage.filtered(),aes(x = TIME, y = Value, colour = Value))+
       geom_line()+
@@ -207,6 +217,7 @@ server <- function(input, output, session) {
     return(h)
   })
   
+  #First table representing the U.S dataframe
   output$table <- renderDataTable({
     filtered.data.frame<-filtered()
     colnames(filtered.data.frame)<-c("Occupation", "Number of all workers(x1000)","Median Salary of All Workers",
@@ -215,11 +226,13 @@ server <- function(input, output, session) {
     return(filtered.data.frame)
   })
   
+  #Second table representing the global + time dataframe
   output$table2 <- renderDataTable({
     filtered.data.with.time<-wage.filtered()
     return(filtered.data.with.time)
   })
   
+  #Label for user input result on line graph
   output$text <- renderText({
     string <- function(input.wage) {
       if(is.null(input.wage))
@@ -230,7 +243,7 @@ server <- function(input, output, session) {
   })
   
 
-  #PARAGRAPHS HERE 
+  #PARAGRAPHS HERE (ALL OF THE BLOCKS OF TEXT ON SHINY LIE BELOW) 
   output$introductionText <- renderText({
     paste("A difference in pay between genders has been a growing social issue in our modern day. With both sides
            holding strong feelings for their preference, it's important to take a step back and analyze the data related
@@ -302,8 +315,9 @@ server <- function(input, output, session) {
     paste0("Contrary to the plot above, the visual below shows a view of the wage gap that's mostly overlooked. Using a high amount of filtering and parsing, 
            we were able to construct a bar graph that highlights occupations that actually pays females higher than males in their field. Although, both the 
            frequency and difference amount is far less than the top 10% of male preferred occupations, it is important to not overlook these occupations when 
-           discussing the idea of wage equality. The goal of reaching an ultimately equal salary across both genders begins with recognizing the issues both 
-           sides present. ")
+           discussing the idea of wage equality. There were only ",nrow(female.favored.difference)," occupations that paid females a higher wage than men, as
+           compared to the massive ", nrow(male.favored.difference), " number of occupations that gave the advantage to males. The goal of reaching an ultimately 
+          equal salary across both genders begins with recognizing the issues both sides present. ")
   })
   
   output$plotText7 <- renderText({
