@@ -1,21 +1,16 @@
 library(shiny)
 source("data.R")
-
+library(shinythemes)
 
 diff.range<-range(data$diff)
 
 
-ui <- fluidPage(
-  
-
-  titlePanel("The Wage Gap"),
-  
-
+ui <- fluidPage(theme = shinytheme("sandstone"),
+                navbarPage("The Wage Gap."),
   sidebarLayout(
     
     sidebarPanel(
       sliderInput('diff.choice', label="Male to Female Wage Gap Range: ", min=diff.range[1], max=diff.range[2], value=diff.range),
-      checkboxInput('smooth', label=strong("Show Trendline"), value=TRUE),
       
       selectInput('data', label="Organize By: ", choices = c("Group", "Individual")),
       
@@ -37,39 +32,42 @@ ui <- fluidPage(
     
     
     mainPanel(
-      tabsetPanel(
+      img(src="gap.png"),
+      p(textOutput('introductionText')),
+      
+      navbarPage("Visuals: ",
+        
         tabPanel("Plot", 
+                 p(textOutput('plotText1')),
                  plotlyOutput('plot'),
                  br(),
-                 p(textOutput('text1')),
+                 p(textOutput('plotText2')),
                  br(),br(),
                  plotlyOutput('plot2'),
                  br(),
-                 p(textOutput('text2')),
+                 p(textOutput('plotText3')),
                  br(),br(),
                  plotlyOutput('plot3'),
                  br(),
-                 p(textOutput('text3')),
+                 p(textOutput('plotText4')),
                  br(),br(),
                  plotlyOutput('plot4'),
                  br(),
-                 p(textOutput('text4')),
+                 p(textOutput('plotText5')),
                  br(),br(),
                  plotlyOutput('plot5'),
                  br(),
-                 p(textOutput('text5')),
+                 p(textOutput('plotText6')),
                  br(),br(),
                  plotlyOutput('plot6'),
                  br(),
-                 p(textOutput('description', inline=TRUE)),
-                 br(),
-                 p(strong("Highlighted Points:"), "(Click and drag on chart to select points!)", tableOutput('selected')),
                  br(),br(),
+                 p(textOutput('plotText7')),
                  plotOutput('plot7', hover = "hover"),
                  p(textOutput('text')),
                  br(),
-                 p(textOutput('text6'))
-          
+                 p(textOutput('conclusionText1')),
+                 p(textOutput('conclusionText2'))
           
           ),
         tabPanel("Table", 
