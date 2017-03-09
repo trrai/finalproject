@@ -28,7 +28,8 @@ ui <- fluidPage(theme = shinytheme("sandstone"),
                       checkboxGroupInput(inputId='occupation2',  label = "Occupation", choices = single.data$Occupation, selected = NULL)
                     ),
                     selectInput("time.wage", "Select Country for Time Wage", choices = data.wage.time$LOCATION %>% unique(),
-                        
+                         
+                                
                          inputPanel(
                          selectInput('facet.by', label="Facet By", choices=c('cut', 'clarity', 'color')),
                         submitButton(text = "Apply Changes", icon = NULL, width = NULL)

@@ -223,8 +223,8 @@ server <- function(input, output) {
   
   observe({
     if (input$Uncheck > 0) {
-      updateCheckboxGroupInput(session=session, inputId="occupation1", label =  "Occupation", choices = grouped.data$Occupation, selected = c("MANAGEMENT", "BUSINESS"))
-      updateCheckboxGroupInput(session=session, inputId='occupation2',  label = "Occupation", choices = single.data$Occupation, selected = NULL)
+      updateCheckboxGroupInput(session = session, inputId = "occupation1", label =  "Occupation", choices = grouped.data$Occupation, selected = c("MANAGEMENT", "BUSINESS"))
+      updateCheckboxGroupInput(session = session, inputId = 'occupation2',  label = "Occupation", choices = single.data$Occupation, selected = NULL)
     }
   })
   
