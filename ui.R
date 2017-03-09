@@ -1,6 +1,5 @@
 library(shiny)
 library(shinythemes)
-library(shinyjs)
 library(plotly)
 source("data.R")
 
