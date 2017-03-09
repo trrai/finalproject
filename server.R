@@ -4,7 +4,20 @@ library(dplyr)
 library(plotly)
 source("data.R")
 
-server <- function(input, output) {
+server <- function(input, output, session) {
+  
+  observeEvent(input$reset, {
+    x <- input$occupation1
+    
+    updateCheckboxGroupInput(session, "occupation1",
+                             selected = c("MANAGEMENT", "BUSINESS")
+    )
+    
+    updateCheckboxGroupInput(session, "occupation2",
+                             selected = character(0)
+    )
+    
+  })
   
   filtered <- reactive({
     db <- data %>%
@@ -31,6 +44,7 @@ server <- function(input, output) {
     )
     
     g<-plot_ly(filtered(), type="bar", x = ~Occupation, y = ~All_workers, color = ~diff,
+               marker = list(colorbar = list(title = "Wage Gap")),
                text = ~paste("Wage Gap: ", diff)) %>% 
       layout(title = "Overall Data w/ Differences", xaxis = x_axis_format, yaxis = y_axis_format)
   
@@ -58,6 +72,7 @@ server <- function(input, output) {
     )
     
     g<-plot_ly(filtered2(), type="bar", x = ~Occupation, y = ~F_workers, color = ~F_weekly,
+               marker = list(colorbar = list(title = "Median Weekly Wage")),
                text = ~paste("Median wage for Females: $", F_weekly)) %>% 
       layout(title = "Female Data with # of workers & pay rate", xaxis = x_axis_format, yaxis = y_axis_format)
     
@@ -89,6 +104,7 @@ server <- function(input, output) {
 
     
     g<-plot_ly(filtered3(), type="bar", x = ~Occupation, y = ~M_workers, color = ~M_weekly,
+               marker = list(colorbar = list(title = "Median Weekly Wage")),
                text = ~paste("Median wage for Males: ", M_weekly)) %>% 
       layout(title = "Male Data with # of workers & pay rate", xaxis = x_axis_format, yaxis = y_axis_format)
     
@@ -117,6 +133,7 @@ server <- function(input, output) {
     )
     
     g<-plot_ly(filtered4(), type="bar", x = ~Occupation, y = ~diff, color = ~All_workers,
+               marker = list(colorbar = list(title = "Amount of Workers")),
                text = ~paste("Amount of workers: ", All_workers)) %>% 
       layout(title = "Bottom 10% of Wage Gap", xaxis = x_axis_format, yaxis = y_axis_format)
     
@@ -143,8 +160,9 @@ server <- function(input, output) {
       
     )
     
-    g<-plot_ly(filtered5(), type="bar", x = ~Occupation, y = ~diff, color = ~(M_workers/All_workers),
-               text = ~paste("Percentage of Male Workers: ", (M_workers/All_workers))) %>% 
+    g<-plot_ly(filtered5(), type="bar", x = ~Occupation, y = ~diff, color = ~(M_workers/All_workers), 
+               marker = list(colorbar = list(title = "% Male Workers")),
+               text = ~paste("Percentage of Male Workers: ", (M_workers/All_workers)))%>% 
       layout(title = "Top 10% of Male Favored Gap", xaxis = x_axis_format, yaxis = y_axis_format)
     
     
@@ -172,6 +190,7 @@ server <- function(input, output) {
     )
     
     g<-plot_ly(filtered6(), type="bar", x = ~Occupation, y = ~abs(diff), color = ~(F_workers/All_workers),
+               marker = list(colorbar = list(title = "% Female Workers")),
                text = ~paste("Percentage of Females workers: ", (F_workers/All_workers))) %>% 
       layout(title = "Top 10% of Female Favored Gap", xaxis = x_axis_format, yaxis = y_axis_format)
     
@@ -179,20 +198,14 @@ server <- function(input, output) {
     return(g)
   })
   
-
-  
-  desc<-reactive({
-    paragraph<-paste0("The graph above is a visual representation for data collected from 150 Iris plants. Currently, the graph represents the ",
-                      input$species.choice, " species of Iris plants. The visual shows a correlation between the sepal length of the plant and the
-    petal length. Sepal length is on a scale from ", input$sepal.choice[1], "cm to ", input$sepal.choice[2],"cm and petal length
-    ranges from ", input$petal.choice[1], "cm to ", input$petal.choice[2], "cm. ")
-    return(paragraph)
+  output$plot7 <- renderPlot ({
+    h <- ggplot(data = wage.filtered(),aes(x = TIME, y = Value, colour = Value))+
+      geom_line()+
+      geom_point()+
+      theme_light()+
+      labs(title = "Change in Wage Gap Over Time", x = "Time (Year)", y = "Wage Gap", colour = "Wage Gap")
+    return(h)
   })
-  
-  output$description<- renderText({
-    return(desc())
-  })
-  
   
   output$table <- renderDataTable({
     filtered.data.frame<-filtered()
@@ -202,13 +215,9 @@ server <- function(input, output) {
     return(filtered.data.frame)
   })
   
-  output$plot7 <- renderPlot ({
-    h <- ggplot(data = wage.filtered(),aes(x = TIME, y = Value, colour = Value))+
-      geom_line()+
-      geom_point()+
-      theme_light()+
-      labs(title = "Line graph showing change in wage gap over time", x = "Time (Year)", y = "")
-    return(h)
+  output$table2 <- renderDataTable({
+    filtered.data.with.time<-wage.filtered()
+    return(filtered.data.with.time)
   })
   
   output$text <- renderText({
@@ -217,7 +226,7 @@ server <- function(input, output) {
         return("Hover over Time Wage Plot")
         paste("Year = ", round(input.wage$x,0), "Wage Gap = ", round(input.wage$y,2))
     }
-    paste0("Numbers:", string(input$hover))
+    paste0("Year and Gap Information:", string(input$hover))
   })
   
   
@@ -235,7 +244,7 @@ server <- function(input, output) {
            between genders over time. In addition, we were able to apply a global scope as this new dataset provided information
            on other countries.",
            
-           "After a thorough workthrough and breakdown of all the data we collected, our group was able to make educated inferences
+           "After a thorough work through and breakdown of all the data we collected, our group was able to make educated inferences
           and realizations. As a whole, it's safe to say there is a wage preference for men as compared to women within the U.S. Although, it
           was very interested to see the other side of the argument and take a look at which occupations actually gave women the higher wage!
           The data we collected and presented provides a strong amount of data to support the claim that the wage gap between genders is a 
@@ -247,7 +256,7 @@ server <- function(input, output) {
   plot1text<-reactive({
     paragraph<-paste0("For a general introduction, we wanted to show the general current state of the occupations selected. In the visual below, you can see
                       the amount of workers in relation to the occupation. In addition, the color of each bar represents the degree of difference within the
-                      wage for males as compared to females. A brighter yellow represents a high wage difference while a darker purple reprents a lower difference.
+                      wage for males as compared to females. A brighter yellow represents a high wage difference while a darker purple indicates a lower difference.
                       The current range of acceptable wage gap difference values is from ", input$diff.choice[1], " to ", input$diff.choice[2],". Please hover over 
                       any of the bars to show the specific occupation as well as the details on the wage gap for that field!")
     return(paragraph)
@@ -262,13 +271,13 @@ server <- function(input, output) {
            for males and females in the specific occupations. The information presented below is collected from the U.S database and provides
            median weekly salaries for women working in each field. To begin, the visual below shows the data for females; relating the occupation
            to the amount of females (in thousands) within that field. This also includes each bar color coordinated to represent the weekly median salary 
-           in US dollars. This gives a better idea on the information collected for females, strengthing the understanding of the wage gap.")
+           in US dollars. This gives a better idea on the information collected for females, strengthening the understanding of the wage gap.")
   })
   
   output$plotText3 <- renderText({
     paste0("Similar to the previous visual, the plot below is a representation of the filtered male data for each occupation. As before, you're able
            to see the median wage for men in each selected field. In addition, each bar's height is made up of the amount of male workers in that field
-           multiplied by a factor of 1000. The filled color fo each of the bar shows the median wage each male is being paid in that field. 
+           multiplied by a factor of 1000. The filled color for each of the bar shows the median wage each male is being paid in that field. 
            Comparing this plot with the previous gives us a good interpretation of how each gender is compensated.")
   })
   
@@ -282,10 +291,10 @@ server <- function(input, output) {
   })
   
   output$plotText5 <- renderText({
-    paste0("Now that we've seen the better side of things in our current situation with the wage gap in America, it's time to look at the areas of improvment. 
-           Analysing which occupations require more attention will not only make the process of reducing the gap more efficient, it will also allow companies 
+    paste0("Now that we've seen the better side of things in our current situation with the wage gap in America, it's time to look at the areas of improvement. 
+           Analyzing which occupations require more attention will not only make the process of reducing the gap more efficient, it will also allow companies 
            to improve on their weaknesses. The visual representation below shows the occupations that made up the top 10% of the wage gap that preferred males
-           over females. Also, the height of the bars show the amount of the difference while the color represents the proportion of males to females in each
+           over females. Also, the height of the bars shows the amount of the difference while the color represents the proportion of males to females in each
            of the occupations. As usual, make sure to hover over any of the bars to get specific figures pertaining to that job field")
   })
   
@@ -302,7 +311,7 @@ server <- function(input, output) {
            from countries around the world. This mean you're able to see the change in overall wage gap as time progresses for any preferred country. Please select 
            the region you would like visualized within the widget options above! Specifically, this line graph shows the change of the value of the wage gap in relation to time. 
            The x axis represents the time in years, while the y axis represents the wage gap as a percentage of the earnings of men. As you can see, in the case of United states, w
-           age gap reached its lowest value in 2008. It has been decreasing over time which reflects a positive change in our society")
+           age gap reached its lowest value in 2008. It has been decreasing over time which reflects a positive change in our society.")
   })
   
   output$conclusionText1 <- renderText({
@@ -315,8 +324,8 @@ server <- function(input, output) {
   
   output$conclusionText2<- renderText({
     paste0("To make progress towards solving a major social issue like this, it's important to remember actions speak louder than words. Our idea behind putting a spotlight
-           on the occupations with the highest and lowest wage gaps was to help develop a plan for improvment. By knowing where the attention should be centered, it assures 
-           that resources will not be wasted and encourages an effective stratedgy. For example, focusing on an occupation that already has a low salary difference would be 
+           on the occupations with the highest and lowest wage gaps was to help develop a plan for improvement. By knowing where the attention should be centered, it assures 
+           that resources will not be wasted and encourages an effective strategy. For example, focusing on an occupation that already has a low salary difference would be 
            wasting time and ultimately does not make much of a difference in the overall scope of the issue. Rather, keying in on the major factors that the enlarge the overall
            issue of a wage gap would be much more effective. Taking a step back from only the U.S, the last visual gives a good idea on data from other countries and also 
            introduces the idea of time. This was critical to include in our report, enhancing the comprehension of a country's improvement on this specific social issue. As noted
@@ -324,6 +333,26 @@ server <- function(input, output) {
            gap, a more specific focus on areas of improvement would prove to help this growth greatly. To sum it all up, there is an overall sense of compensation inequality within 
            the U.S, and other countries as well, but a lot of progress has been made over the years and our society will continue to push towards equality. ")
   })
+  
+  output$tableText<- renderText({
+    paste0("A nice compliment to the visuals in this report is a table showing the data we worked with. Below, we've included an organized format of the table used to 
+           conduct this report. The columns include occupation, number of workers (overall, and by gender), as well as wage information. All of the salary information 
+           provided is in US dollars and the amount of workers is in the thousands. Please feel free to search for specific entries using the search bar, or narrow the
+           amount of results by changing the rows per page! ")
+  })
+  
+  reactiveTableText<-reactive({
+    text<-paste0("Along with the previous data table showing the information used to make calculations about specific occupations in the U.S, this dataset was used to make the 
+           visual representing wage change over time. The current country being shown is ", input$time.wage, " and includes the values of the wage gap as well as the year
+                 associated with the data. You can search for specific years using the search bar or change how many entries you'd like to see by adjusting the option 
+                 on the left. ")
+    return(text)
+  })
+  
+  output$tableText2<- renderText({
+    return(reactiveTableText())
+  })
+  
   
 }
 

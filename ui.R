@@ -17,6 +17,8 @@ ui <- fluidPage(theme = shinytheme("sandstone"),
                     
                     selectInput('data', label="Organize By: ", choices = c("Group", "Individual")),
                     
+                    actionButton("reset", "Clear Choices"),
+                    
                     conditionalPanel(
                       condition = "input.data == 'Group'",
                       checkboxGroupInput('occupation1', "Occupation", choices = grouped.data$Occupation, selected = c("MANAGEMENT", "BUSINESS"))
@@ -26,14 +28,8 @@ ui <- fluidPage(theme = shinytheme("sandstone"),
                       condition = "input.data == 'Individual'",
                       checkboxGroupInput('occupation2', "Occupation", choices = single.data$Occupation, selected = NULL)
                     ),
-                    selectInput("time.wage", "Select Country for Time Wage", choices = data.wage.time$LOCATION %>% unique(),
-                        
-                         inputPanel(
-                         selectInput('facet.by', label="Facet By", choices=c('cut', 'clarity', 'color')),
-                        submitButton(text = "Apply Changes", icon = NULL, width = NULL)
-                          )
                      
-                       )
+                    selectInput("time.wage", "Select Country for Time Wage", choices = data.wage.time$LOCATION %>% unique())
                   ),
                     
                     
@@ -65,13 +61,16 @@ ui <- fluidPage(theme = shinytheme("sandstone"),
                                           
                                  ),
                                  
-                                 tabPanel("Table", 
-                                          p("The table below is a collection of the data visualized in the plot. Although, in addition to seeing the 
-                   sepal height and petal height, you're also able to see the sepal width and petal width! You can search for 
-                   specific data entries using the search bar on the right, or organize how many results you would like to see
-                   per page using the selector on the left."),
+                                 tabPanel("U.S TABLE", 
+                                          p(textOutput('tableText')),
                                           dataTableOutput('table')
+                                 ),
+                                 
+                                 tabPanel("WAGE GAP / TIME TABLE", 
+                                          p(textOutput('tableText2')),
+                                          dataTableOutput('table2')
                                  )
+                                
                       )
                       
                     )
