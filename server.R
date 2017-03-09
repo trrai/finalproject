@@ -324,8 +324,9 @@ server <- function(input, output, session) {
     paste0("Now it's time to incorporate a factor of time into the data. A bit different from all of the previous visuals, the graph is collected on data collected
            from countries around the world. This mean you're able to see the change in overall wage gap as time progresses for any preferred country. Please select 
            the region you would like visualized within the widget options above! Specifically, this line graph shows the change of the value of the wage gap in relation to time. 
-           The x axis represents the time in years, while the y axis represents the wage gap as a percentage of the earnings of men. As you can see, in the case of United states, w
-           age gap reached its lowest value in 2008. It has been decreasing over time which reflects a positive change in our society.")
+           The x axis represents the time in years, while the y axis represents the wage gap as a percentage of the earnings of men. As you can see, in the case of United states, 
+           wage gap reached its lowest value in 2008. It has been decreasing over time which reflects a positive change in our society. For specific details on other countries, 
+           or time periods, you can hover over any of the datapoints to receive information on the label below the graph.")
   })
   
   output$conclusionText1 <- renderText({
