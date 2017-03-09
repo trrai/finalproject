@@ -8,7 +8,7 @@ diff.range<-range(data$diff)
 
 
 ui <- fluidPage(theme = shinytheme("sandstone"),
-                navbarPage("Analyzing Unequal Pay: A Report By Group AE5"),
+                navbarPage("Analyzing Equal Pay: A Report By Group AE5"),
                 
                 sidebarLayout(
                   
