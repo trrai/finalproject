@@ -207,7 +207,7 @@ server <- function(input, output) {
       geom_line()+
       geom_point()+
       theme_light()+
-    labs(title = "Line graph showing change in wage gap over time", x = "Time (Year)", y = "")
+      labs(title = "Line graph showing change in wage gap over time", x = "Time (Year)", y = "")
     return(h)
   })
   
